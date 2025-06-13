@@ -27,8 +27,13 @@ Aplikasi ini dilengkapi fitur untuk menyimpan hasil spesifikasi ke file `.txt` d
 
 ## 📥 Instalasi & Cara Pakai
 
-### 1️⃣ Clone repository ini:
+### Clone repository ini:
 
 ```bash
 git clone https://github.com/Gilang222/spec-checker.git
+
 cd spec-checker
+
+pip install -r requirements.txt
+
+python spec_checker.py
