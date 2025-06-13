@@ -10,7 +10,6 @@ import netifaces
 import datetime
 import threading
 
-# Function untuk ambil MAC Address berdasarkan jenis interface
 def get_network_adapters_info():
     adapters_info = []
     for interface in netifaces.interfaces():
@@ -27,7 +26,6 @@ def get_network_adapters_info():
             adapters_info.append(f"{interface} - Error: {e}")
     return adapters_info
 
-# Function untuk ambil IP Address akurat
 def get_ip_address():
     try:
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -38,7 +36,6 @@ def get_ip_address():
     except Exception:
         return "Tidak ditemukan"
 
-# Function untuk ambil device spesifikasi
 def get_specs():
     c = wmi.WMI()
 
@@ -68,7 +65,6 @@ def get_specs():
 
         check_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-        # Update label values
         labels["Waktu Cek"].set(check_time)
         labels["CPU"].set(cpu['brand_raw'])
         labels["GPU"].set(gpu)
@@ -83,7 +79,6 @@ def get_specs():
         labels["System Uptime"].set(uptime)
         labels["IP Address"].set(ip_address)
 
-        # Ambil semua adapter
         adapter_info = "\n".join(get_network_adapters_info())
         labels["Network Adapters"].set(adapter_info)
         
@@ -92,7 +87,6 @@ def get_specs():
     except Exception as e:
         status_var.set(f"Error: {e}")
 
-# Function untuk export hasil ke file txt
 def run_specs_thread():
     threading.Thread(targer=get_specs, daemon=True).start()
 
@@ -115,7 +109,6 @@ def save_to_file():
         messagebox.showerror("Error", f"Gagal menyimpan file: {e}")
         status_var.set("Gagal menyimpan file.")
 
-# Function copy ke clipboard
 def copy_to_clipboard():
     try:
         text = ""
@@ -132,7 +125,6 @@ def copy_to_clipboard():
     except Exception as e:
         status_var.set(f"Error: {e}")
 
-# GUI setup
 root = tk.Tk()
 root.title("HokBen Spec Checker v1.0")
 root.geometry("720x650")
@@ -155,12 +147,10 @@ for field in spec_fields:
     ttk.Label(mainframe, textvariable=labels[field], wraplength=500).grid(column=1, row=row, sticky=tk.W, padx=5, pady=2)
     row += 1
 
-# Tombol-tombol
 ttk.Button(mainframe, text="Cek Spesifikasi", command=get_specs).grid(column=0, row=row, columnspan=2, pady=8)
 ttk.Button(mainframe, text="Simpan ke File", command=save_to_file).grid(column=0, row=row+1, columnspan=2, pady=8)
 ttk.Button(mainframe, text="Copy ke Clipboard", command=copy_to_clipboard).grid(column=0, row=row+2, columnspan=2, pady=8)
 
-# Status bar
 status_var = tk.StringVar()
 status_var.set("Siap.")
 status_bar = ttk.Label(root, textvariable=status_var, relief="sunken", anchor="w", padding=5)
